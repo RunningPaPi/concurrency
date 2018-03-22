@@ -19,12 +19,12 @@ public class ConcurrencyTest {
 	public static int count = 0;
 
 	public static void main(String[] args) throws Exception {
-		ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService executorService = Executors.newCachedThreadPool();
 		final Semaphore semaphore = new Semaphore(threadTotal);
-		final CountDownLatch cdl = new CountDownLatch(clientTotal);
+		final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
 
 		for (int i = 0; i < clientTotal; i++) {
-			es.execute(() -> {
+			executorService.execute(() -> {
 				try {
 					semaphore.acquire();
 					add();
@@ -32,13 +32,13 @@ public class ConcurrencyTest {
 				} catch (Exception e) {
 					log.error("exception", e);
 				}
-
+				countDownLatch.countDown();
 			});
 		}
-		
-		//System.out.println(count);
-		cdl.await();
-		es.shutdown();
+
+		// System.out.println(count);
+		countDownLatch.await();
+		executorService.shutdown();
 		log.info("count:{}", count);
 
 	}
