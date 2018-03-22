@@ -37,7 +37,7 @@ public class ConcurrencyTest {
 		}
 		
 		//System.out.println(count);
-		//cdl.await(10,TimeUnit.SECONDS);
+		cdl.await();
 		es.shutdown();
 		log.info("count:{}", count);
 
